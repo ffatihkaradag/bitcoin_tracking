@@ -162,7 +162,10 @@ class _HomeScreenState extends State<HomeScreen> {
           getData();
         },
         tooltip: 'Increment',
-        child: Icon(Icons.refresh),
+        child: Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
       ),
     );
   }
