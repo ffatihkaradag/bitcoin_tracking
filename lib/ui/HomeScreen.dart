@@ -100,6 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Bitcoin Tracker"),
+        leading: IconButton(
+          icon: Icon(Icons.account_circle),
+          onPressed: () {
+            Navigator.pushNamed(context, '/info');
+          },
+        ),
         actions: [Platform.isIOS ? iOSPicker() : androidDropdown()],
         centerTitle: true,
       ),

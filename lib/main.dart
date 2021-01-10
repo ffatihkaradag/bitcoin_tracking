@@ -1,4 +1,5 @@
 import 'package:bitcoin_tracking/ui/HomeScreen.dart';
+import 'package:bitcoin_tracking/ui/InfoScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,6 +17,10 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomeScreen(),
+      routes: {
+        '/home': (context) => HomeScreen(),
+        '/info': (context) => InfoScreen(),
+      },
     );
   }
 }
