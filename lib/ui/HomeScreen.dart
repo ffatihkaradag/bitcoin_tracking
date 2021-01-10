@@ -4,6 +4,7 @@ import 'package:bitcoin_tracking/services/Coin.dart';
 import 'package:bitcoin_tracking/widgets/CryptoCard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -78,6 +79,22 @@ class _HomeScreenState extends State<HomeScreen> {
     getData();
   }
 
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    getData();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    getData();
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,31 +103,59 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [Platform.isIOS ? iOSPicker() : androidDropdown()],
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CryptoCard(
-                cryptoCurrency: 'BTC',
-                selectedCurrency: selectedCurrency,
-                value: isWaiting ? '?' : coinValues['BTC'],
-              ),
-              CryptoCard(
-                cryptoCurrency: 'ETH',
-                selectedCurrency: selectedCurrency,
-                value: isWaiting ? '?' : coinValues['ETH'],
-              ),
-              CryptoCard(
-                cryptoCurrency: 'LTC',
-                selectedCurrency: selectedCurrency,
-                value: isWaiting ? '?' : coinValues['LTC'],
-              ),
-            ],
-          ),
-        ],
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: WaterDropHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context, LoadStatus mode) {
+            Widget body;
+            if (mode == LoadStatus.idle) {
+              body = Text("pull up load");
+            } else if (mode == LoadStatus.loading) {
+              body = CupertinoActivityIndicator();
+            } else if (mode == LoadStatus.failed) {
+              body = Text("Load Failed! Click retry!");
+            } else if (mode == LoadStatus.canLoading) {
+              body = Text("release to load more");
+            } else {
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child: body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                CryptoCard(
+                  cryptoCurrency: 'BTC',
+                  selectedCurrency: selectedCurrency,
+                  value: isWaiting ? '?' : coinValues['BTC'],
+                ),
+                CryptoCard(
+                  cryptoCurrency: 'ETH',
+                  selectedCurrency: selectedCurrency,
+                  value: isWaiting ? '?' : coinValues['ETH'],
+                ),
+                CryptoCard(
+                  cryptoCurrency: 'LTC',
+                  selectedCurrency: selectedCurrency,
+                  value: isWaiting ? '?' : coinValues['LTC'],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

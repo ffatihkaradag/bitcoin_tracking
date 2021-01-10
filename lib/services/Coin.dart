@@ -34,7 +34,7 @@ const List<String> cryptoList = [
 
 //curl https://rest.coinapi.io/v1/exchangerate/BTC/USD?apikey=D8879841-F1D8-4FD5-BC67-003D1AA721BB
 const coinAPIURL = 'https://rest.coinapi.io/v1/exchangerate';
-const apiKey = 'DBC951C8-991F-49EC-95BB-8AFD7353D5B2';
+const apiKey = 'D8879841-F1D8-4FD5-BC67-003D1AA721BB';
 const bitcoinAverageURL = 'https://rest.coinapi.io/v1/exchangerate';
 
 class Coin {
