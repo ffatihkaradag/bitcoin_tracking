@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 class InfoScreen extends StatefulWidget {
@@ -79,8 +78,6 @@ class _InfoScreenState extends State<InfoScreen> {
 
     if (response.statusCode == 200) {
       _bitcoinDetails = jsonDecode(response.body);
-      print("ok");
-      // var _bitcoinPrice = NumberFormat.currency().format(decodedData['rate']);
     } else {
       print(response.statusCode);
       throw 'Problem with the get request';
